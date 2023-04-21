@@ -1,0 +1,113 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://entities/player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/textures/background.png" type="Texture" id=2]
+[ext_resource path="res://Main.gd" type="Script" id=3]
+[ext_resource path="res://entities/enemies/Turret.tscn" type="PackedScene" id=4]
+[ext_resource path="res://entities/enemies/TurretsSpawner.gd" type="Script" id=5]
+[ext_resource path="res://entities/floor/Floor.tscn" type="PackedScene" id=6]
+[ext_resource path="res://entities/cube/Cube.tscn" type="PackedScene" id=7]
+[ext_resource path="res://entities/floor/Platform.tscn" type="PackedScene" id=8]
+[ext_resource path="res://entities/player/EasterEgg.tscn" type="PackedScene" id=9]
+
+[node name="Main" type="Node"]
+script = ExtResource( 3 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="TextureRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 2 )
+expand = true
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 413.003, 395.272 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+
+[node name="TurretsSpawner" type="Node" parent="."]
+script = ExtResource( 5 )
+turret_scene = ExtResource( 4 )
+
+[node name="Floor" parent="." instance=ExtResource( 6 )]
+
+[node name="Floor2" parent="." instance=ExtResource( 6 )]
+position = Vector2( 1996, 515 )
+
+[node name="Floor3" parent="." instance=ExtResource( 6 )]
+position = Vector2( 1198, 515 )
+
+[node name="Cube" parent="." instance=ExtResource( 7 )]
+
+[node name="Cube4" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1893, -184 )
+
+[node name="Cube5" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1925, -184 )
+
+[node name="Cube6" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1915, -216 )
+
+[node name="Cube7" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1955, -184 )
+
+[node name="Cube8" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1946, -216 )
+
+[node name="Cube9" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1933, -248 )
+
+[node name="Cube10" parent="." instance=ExtResource( 7 )]
+position = Vector2( 2984, 298 )
+
+[node name="Cube11" parent="." instance=ExtResource( 7 )]
+position = Vector2( 3106, 108 )
+
+[node name="Cube12" parent="." instance=ExtResource( 7 )]
+position = Vector2( 3094, 80 )
+
+[node name="Cube13" parent="." instance=ExtResource( 7 )]
+position = Vector2( 3101, 52 )
+
+[node name="Cube2" parent="." instance=ExtResource( 7 )]
+position = Vector2( 515, 373 )
+
+[node name="Cube3" parent="." instance=ExtResource( 7 )]
+position = Vector2( 514, 412 )
+
+[node name="PlatformS1" parent="." instance=ExtResource( 8 )]
+position = Vector2( 3002, 464 )
+scale = Vector2( 0.3, 1 )
+
+[node name="PlatformS2" parent="." instance=ExtResource( 8 )]
+position = Vector2( 3385, 310 )
+scale = Vector2( 0.3, 1 )
+
+[node name="PlatformS3" parent="." instance=ExtResource( 8 )]
+position = Vector2( 3032, 155 )
+scale = Vector2( 0.3, 1 )
+
+[node name="PlatformS4" parent="." instance=ExtResource( 8 )]
+position = Vector2( 2683, 12 )
+scale = Vector2( 0.3, 1 )
+
+[node name="PlatformL1" parent="." instance=ExtResource( 8 )]
+position = Vector2( 1688, -123 )
+
+[node name="PlatformL2" parent="." instance=ExtResource( 8 )]
+position = Vector2( 1314, -123 )
+
+[node name="PlatformL3" parent="." instance=ExtResource( 8 )]
+position = Vector2( 822, -123 )
+
+[node name="PlatformL4" parent="." instance=ExtResource( 8 )]
+position = Vector2( 254, -123 )
+
+[node name="PlatformL5" parent="." instance=ExtResource( 8 )]
+position = Vector2( 2027, -123 )
+
+[node name="Win" parent="." instance=ExtResource( 9 )]
+position = Vector2( -14, -325 )
