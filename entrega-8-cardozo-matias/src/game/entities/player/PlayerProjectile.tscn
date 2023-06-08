@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/game/entities/Projectile.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/textures/player/cat_food.png" type="Texture" id=2]
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "shoot"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 360.0 ]
+}
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 12.0416
+
+[node name="PlayerProjectile" instance=ExtResource( 1 )]
+projectile_anim_path = NodePath("ProjectileAnim")
+
+[node name="ProjectileAnim" type="AnimationPlayer" parent="." index="1"]
+anims/RESET = SubResource( 3 )
+anims/shoot = SubResource( 2 )
+
+[node name="Body" parent="." index="2"]
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 2 )
+
+[node name="Hitbox" parent="." index="3"]
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource( 1 )

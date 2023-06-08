@@ -1,0 +1,206 @@
+[gd_scene load_steps=22 format=2]
+
+[ext_resource path="res://src/game/entities/enemies/CatAnim.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://src/game/entities/enemies/Cat.gd" type="Script" id=2]
+[ext_resource path="res://src/game/entities/enemies/CatProjectile.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/game/entities/enemies/DetectionArea.gd" type="Script" id=4]
+[ext_resource path="res://assets/textures/green_circle.png" type="Texture" id=5]
+[ext_resource path="res://src/game/entities/enemies/CatStateMachine.gd" type="Script" id=6]
+[ext_resource path="res://src/game/entities/enemies/states/IdleState.gd" type="Script" id=7]
+[ext_resource path="res://src/game/entities/enemies/states/AlertState.gd" type="Script" id=8]
+[ext_resource path="res://src/game/entities/enemies/states/WalkState.gd" type="Script" id=9]
+[ext_resource path="res://src/game/entities/enemies/states/DeadState.gd" type="Script" id=10]
+[ext_resource path="res://assets/sound/sfx/CatAttack.ogg" type="AudioStream" id=11]
+[ext_resource path="res://assets/sound/sfx/CatPurr1.mp3" type="AudioStream" id=12]
+[ext_resource path="res://assets/sound/sfx/CatPurr2.wav" type="AudioStream" id=14]
+[ext_resource path="res://assets/sound/sfx/CatDie.ogg" type="AudioStream" id=15]
+[ext_resource path="res://assets/sound/sfx/Leaves1.ogg" type="AudioStream" id=16]
+[ext_resource path="res://assets/sound/sfx/Leaves2.ogg" type="AudioStream" id=17]
+[ext_resource path="res://src/utils/AudioHandler2D.tscn" type="PackedScene" id=18]
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0.26, 0.26 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Body:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 11 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "remove"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.26, 0.26 ), Vector2( 1e-05, 1e-05 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Body:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 11 ), Vector2( 0, 71 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_remove"
+} ]
+}
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 46 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 328.39
+
+[node name="Cat" type="KinematicBody2D"]
+collision_layer = 4
+script = ExtResource( 2 )
+projectile_scene = ExtResource( 3 )
+gravity = Vector2( 0, 98 )
+
+[node name="RemoveAnimPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 4 )
+anims/remove = SubResource( 3 )
+
+[node name="IdleSfx" parent="." instance=ExtResource( 18 )]
+_audio_references = [ ExtResource( 12 ), ExtResource( 14 ) ]
+_db_volumes = [ -15.0, -15.0 ]
+_pitch_scales = [ [ 0.9, 1.1 ], [ 0.9, 1.1 ] ]
+
+[node name="AttackSfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 11 )
+volume_db = -15.0
+bus = "Feedback"
+
+[node name="WalkSfx" parent="." instance=ExtResource( 18 )]
+_audio_references = [ ExtResource( 16 ), ExtResource( 17 ) ]
+_db_volumes = [ -20.0, -20.0 ]
+_pitch_scales = [ [ 0.9, 1.1 ], [ 0.9, 1.1 ] ]
+_attenuation = 3.0
+
+[node name="DieSfx" parent="." instance=ExtResource( 18 )]
+_audio_references = [ ExtResource( 15 ) ]
+_db_volumes = [ -15.0 ]
+_pitch_scales = [ [ 0.9, 1.1 ] ]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 6 )
+START_STATE = NodePath("Idle")
+character_path = NodePath("..")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+idle_sfx_path = NodePath("../../IdleSfx")
+idle_sfx_delay = PoolRealArray( 5, 30 )
+
+[node name="IdleTimer" type="Timer" parent="StateMachine/Idle"]
+one_shot = true
+
+[node name="IdleSfxTimer" type="Timer" parent="StateMachine/Idle"]
+wait_time = 15.0
+one_shot = true
+
+[node name="Alert" type="Node" parent="StateMachine"]
+script = ExtResource( 8 )
+attack_sfx_path = NodePath("../../AttackSfx")
+
+[node name="FireTimer" type="Timer" parent="StateMachine/Alert"]
+one_shot = true
+
+[node name="Walk" type="Node" parent="StateMachine"]
+script = ExtResource( 9 )
+walk_sfx_path = NodePath("../../WalkSfx")
+wander_radius = Vector2( 500, 0 )
+speed = 5.0
+max_h_speed = 60.0
+
+[node name="WalkSfxTimer" type="Timer" parent="StateMachine/Walk"]
+wait_time = 0.5
+
+[node name="Dead" type="Node" parent="StateMachine"]
+script = ExtResource( 10 )
+die_sfx_path = NodePath("../../DieSfx")
+
+[node name="FirePosition" type="Position2D" parent="."]
+position = Vector2( 0, 17.9661 )
+
+[node name="Body" type="AnimatedSprite" parent="."]
+position = Vector2( 0, 11 )
+scale = Vector2( 0.26, 0.26 )
+frames = ExtResource( 1 )
+animation = "idle"
+frame = 4
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 23 )
+shape = SubResource( 1 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 0.0429001, 17.9341 )
+enabled = true
+cast_to = Vector2( 0, 0 )
+collision_mask = 3
+
+[node name="DetectionArea" type="Area2D" parent="."]
+position = Vector2( 0, 11 )
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 4 )
+
+[node name="green_circle" type="Sprite" parent="DetectionArea"]
+modulate = Color( 1, 1, 1, 0.301961 )
+scale = Vector2( 1.3, 1.3 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource( 2 )
+
+[connection signal="hit" from="." to="StateMachine" method="notify_hit"]
+[connection signal="timeout" from="StateMachine/Idle/IdleTimer" to="StateMachine/Idle" method="_on_IdleTimer_timeout"]
+[connection signal="timeout" from="StateMachine/Alert/FireTimer" to="StateMachine/Alert" method="_on_FireTimer_timeout"]
+[connection signal="timeout" from="StateMachine/Walk/WalkSfxTimer" to="StateMachine/Walk" method="_on_WalkSfxTimer_timeout"]
+[connection signal="animation_finished" from="Body" to="StateMachine" method="_on_animation_finished"]
+[connection signal="body_entered" from="DetectionArea" to="StateMachine" method="notify_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="StateMachine" method="notify_body_exited"]

@@ -1,0 +1,251 @@
+[gd_scene load_steps=29 format=2]
+
+[ext_resource path="res://src/game/entities/player/Player.gd" type="Script" id=1]
+[ext_resource path="res://assets/textures/player/girl_spritesheet.png" type="Texture" id=2]
+[ext_resource path="res://assets/textures/player/raygunPurpleBig.png" type="Texture" id=3]
+[ext_resource path="res://src/game/entities/player/Cannon.gd" type="Script" id=4]
+[ext_resource path="res://src/game/entities/player/PlayerProjectile.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/textures/player/slimeGreen.png" type="Texture" id=6]
+[ext_resource path="res://src/game/entities/player/playerwalk.tres" type="Animation" id=7]
+[ext_resource path="res://src/game/entities/player/playerdead.tres" type="Animation" id=8]
+[ext_resource path="res://src/game/entities/player/playeridle.tres" type="Animation" id=9]
+[ext_resource path="res://src/game/entities/player/playerjump.tres" type="Animation" id=10]
+[ext_resource path="res://src/game/entities/player/PlayerStateMachine.gd" type="Script" id=11]
+[ext_resource path="res://src/game/entities/player/states/IdleState.gd" type="Script" id=12]
+[ext_resource path="res://src/game/entities/player/states/WalkState.gd" type="Script" id=13]
+[ext_resource path="res://src/game/entities/player/states/JumpState.gd" type="Script" id=14]
+[ext_resource path="res://src/game/entities/player/states/DeadState.gd" type="Script" id=15]
+[ext_resource path="res://src/game/entities/player/states/DashState.gd" type="Script" id=16]
+[ext_resource path="res://assets/sound/sfx/Jump.ogg" type="AudioStream" id=17]
+[ext_resource path="res://assets/sound/sfx/PlayerDash.ogg" type="AudioStream" id=18]
+[ext_resource path="res://assets/sound/sfx/Leaves2.ogg" type="AudioStream" id=19]
+[ext_resource path="res://assets/sound/sfx/PlayerAttack.ogg" type="AudioStream" id=20]
+[ext_resource path="res://assets/sound/sfx/PlayerHurt.wav" type="AudioStream" id=21]
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/Slime:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0.158768, -152.913 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Body/Slime:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "dash"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0.929412, 1, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "audio"
+tracks/1/path = NodePath("SfxOutput")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 18 )
+} ],
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "heal"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 1, 0.133333, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "hit"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 6752, 3008 )
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 26.0
+height = 70.0
+
+[node name="Player" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource( 1 )
+max_hp = 5
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 11 )
+START_STATE = NodePath("Idle")
+character_path = NodePath("..")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource( 12 )
+
+[node name="Walk" type="Node" parent="StateMachine"]
+script = ExtResource( 13 )
+
+[node name="Dead" type="Node" parent="StateMachine"]
+script = ExtResource( 15 )
+
+[node name="HurtSfx" type="AudioStreamPlayer" parent="StateMachine/Dead"]
+stream = ExtResource( 21 )
+bus = "UI"
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource( 14 )
+
+[node name="JumpSfx" type="AudioStreamPlayer" parent="StateMachine/Jump"]
+stream = ExtResource( 17 )
+bus = "Surround"
+
+[node name="Dash" type="Node" parent="StateMachine"]
+script = ExtResource( 16 )
+dash_time = 0.2
+speed_multiplier = 8.0
+dash_cooldown_color = Color( 0.407843, 0.431373, 1, 1 )
+
+[node name="BodyAnimations" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 4 )
+anims/dead = ExtResource( 8 )
+anims/idle = ExtResource( 9 )
+anims/jump = ExtResource( 10 )
+anims/walk = ExtResource( 7 )
+
+[node name="EffectsAnimations" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 5 )
+anims/dash = SubResource( 8 )
+anims/heal = SubResource( 7 )
+anims/hit = SubResource( 6 )
+
+[node name="DashCooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="SfxOutput" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 18 )
+bus = "Surround"
+
+[node name="AnimationsOutput" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 19 )
+volume_db = -10.0
+bus = "Surround"
+
+[node name="Body" type="Sprite" parent="."]
+position = Vector2( -0.0635071, 0.165405 )
+scale = Vector2( 0.4, 0.4 )
+texture = SubResource( 2 )
+offset = Vector2( 50, 0 )
+hframes = 15
+vframes = 8
+frame = 47
+
+[node name="Slime" type="Sprite" parent="Body"]
+unique_name_in_owner = true
+position = Vector2( 0.158768, -152.913 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 6 )
+
+[node name="CannonContainer" type="Node2D" parent="Body/Slime"]
+unique_name_in_owner = true
+
+[node name="Cannon" type="Sprite" parent="Body/Slime/CannonContainer"]
+unique_name_in_owner = true
+texture = ExtResource( 3 )
+script = ExtResource( 4 )
+projectile_scene = ExtResource( 5 )
+
+[node name="CannonTip" type="Position2D" parent="Body/Slime/CannonContainer/Cannon"]
+position = Vector2( 15, 0 )
+
+[node name="FireSfx" type="AudioStreamPlayer" parent="Body/Slime/CannonContainer/Cannon"]
+stream = ExtResource( 20 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 3 )
+
+[node name="FloorRaycasts" type="Node2D" parent="."]
+position = Vector2( 0, 60 )
+
+[node name="RayCast2D" type="RayCast2D" parent="FloorRaycasts"]
+cast_to = Vector2( 0, 5 )
+
+[node name="RayCast2D2" type="RayCast2D" parent="FloorRaycasts"]
+position = Vector2( -15, 0 )
+cast_to = Vector2( 0, 5 )
+
+[node name="RayCast2D3" type="RayCast2D" parent="FloorRaycasts"]
+position = Vector2( 15, 0 )
+cast_to = Vector2( 0, 5 )
+
+[connection signal="healed" from="." to="StateMachine" method="notify_healed"]
+[connection signal="hit" from="." to="StateMachine" method="notify_hit"]
+[connection signal="animation_finished" from="BodyAnimations" to="StateMachine" method="_on_animation_finished"]

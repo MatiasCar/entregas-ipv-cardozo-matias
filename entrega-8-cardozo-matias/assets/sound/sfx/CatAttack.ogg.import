@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/CatAttack.ogg-7e1961b34a1e86b82b63a5816b36a2be.oggstr"
+
+[deps]
+
+source_file="res://assets/sound/sfx/CatAttack.ogg"
+dest_files=[ "res://.import/CatAttack.ogg-7e1961b34a1e86b82b63a5816b36a2be.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

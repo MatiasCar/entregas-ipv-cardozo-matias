@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/CatPurr1.mp3-6dd644b4424892b4cec7f4a6dd6864ae.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/sfx/CatPurr1.mp3"
+dest_files=[ "res://.import/CatPurr1.mp3-6dd644b4424892b4cec7f4a6dd6864ae.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

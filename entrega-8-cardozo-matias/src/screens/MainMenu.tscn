@@ -1,0 +1,204 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://src/screens/MainMenu.gd" type="Script" id=1]
+[ext_resource path="res://assets/fonts/Title-Big.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/textures/ui/menus/background/sky.png" type="Texture" id=3]
+[ext_resource path="res://assets/textures/ui/menus/background/far-clouds.png" type="Texture" id=4]
+[ext_resource path="res://assets/textures/ui/menus/background/far-mountains.png" type="Texture" id=5]
+[ext_resource path="res://assets/textures/ui/menus/background/mountains.png" type="Texture" id=6]
+[ext_resource path="res://assets/fonts/Default-Medium.tres" type="DynamicFont" id=7]
+[ext_resource path="res://assets/textures/ui/menus/background/near-clouds.png" type="Texture" id=8]
+[ext_resource path="res://assets/textures/ui/menus/background/trees.png" type="Texture" id=9]
+[ext_resource path="res://src/screens/ScrollingTexture.gdshader" type="Shader" id=10]
+[ext_resource path="res://src/game/levels/LevelManager.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/sound/bgm/menu.wav" type="AudioStream" id=12]
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = ExtResource( 10 )
+shader_param/motion = Vector2( 0, 0 )
+shader_param/scale = 2.9
+shader_param/offset = Vector2( 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 10 )
+shader_param/motion = Vector2( 12, 0 )
+shader_param/scale = 1.5
+shader_param/offset = Vector2( 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 10 )
+shader_param/motion = Vector2( 25, 0 )
+shader_param/scale = 1.5
+shader_param/offset = Vector2( 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 10 )
+shader_param/motion = Vector2( 50, 0 )
+shader_param/scale = 1.5
+shader_param/offset = Vector2( 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = ExtResource( 10 )
+shader_param/motion = Vector2( 100, 0 )
+shader_param/scale = 1.8
+shader_param/offset = Vector2( 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = ExtResource( 10 )
+shader_param/motion = Vector2( 200, 0 )
+shader_param/scale = 2.5
+shader_param/offset = Vector2( 0, 0 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color( 0, 0, 0, 0 )
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color( 0, 0, 0, 0.4 )
+shadow_size = 13
+
+[node name="MainMenu" type="Node"]
+script = ExtResource( 1 )
+level_manager_scene = ExtResource( 11 )
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+volume_db = -15.0
+autoplay = true
+bus = "BGM"
+
+[node name="Container" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Backgrounds" type="Control" parent="Container"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Background1" type="TextureRect" parent="Container/Backgrounds"]
+material = SubResource( 9 )
+anchor_right = 1.0
+margin_top = -40.0
+margin_bottom = 224.0
+mouse_filter = 2
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 1
+
+[node name="Background2" type="TextureRect" parent="Container/Backgrounds"]
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 4 )
+expand = true
+
+[node name="Background3" type="TextureRect" parent="Container/Backgrounds"]
+material = SubResource( 5 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 1
+
+[node name="Background4" type="TextureRect" parent="Container/Backgrounds"]
+material = SubResource( 6 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 1
+
+[node name="Background5" type="TextureRect" parent="Container/Backgrounds"]
+material = SubResource( 7 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 1
+
+[node name="Fill" type="ColorRect" parent="Container/Backgrounds"]
+anchor_top = 0.698
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -101.56
+mouse_filter = 2
+color = Color( 0.172549, 0.145098, 0.27451, 1 )
+
+[node name="Background6" type="TextureRect" parent="Container/Backgrounds"]
+material = SubResource( 8 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -138.0
+mouse_filter = 2
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 1
+
+[node name="Title" type="Label" parent="Container"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -245.5
+margin_top = 131.0
+margin_right = 245.5
+margin_bottom = 212.0
+grow_horizontal = 2
+custom_colors/font_color = Color( 1, 0.847059, 0.447059, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "Kitty Feed"
+align = 1
+
+[node name="Buttons" type="VBoxContainer" parent="Container"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 21.0
+margin_top = 63.0
+margin_right = 216.0
+margin_bottom = 212.0
+mouse_filter = 2
+custom_constants/separation = 25
+
+[node name="StartButton" type="Button" parent="Container/Buttons"]
+margin_right = 195.0
+margin_bottom = 62.0
+custom_colors/font_color_disabled = Color( 0.63, 0.56301, 0.4473, 1 )
+custom_colors/font_color_focus = Color( 0.980392, 0.752941, 0.364706, 1 )
+custom_colors/font_color = Color( 0.61, 0.46909, 0.2257, 1 )
+custom_colors/font_color_hover = Color( 0.980392, 0.752941, 0.364706, 1 )
+custom_colors/font_color_pressed = Color( 0.980392, 0.752941, 0.364706, 1 )
+custom_fonts/font = ExtResource( 7 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/disabled = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+text = "Start"
+
+[node name="ExitButton" type="Button" parent="Container/Buttons"]
+margin_top = 87.0
+margin_right = 195.0
+margin_bottom = 149.0
+custom_colors/font_color_disabled = Color( 0.63, 0.56301, 0.4473, 1 )
+custom_colors/font_color_focus = Color( 0.980392, 0.752941, 0.364706, 1 )
+custom_colors/font_color = Color( 0.61, 0.46909, 0.2257, 1 )
+custom_colors/font_color_hover = Color( 0.980392, 0.752941, 0.364706, 1 )
+custom_colors/font_color_pressed = Color( 0.980392, 0.752941, 0.364706, 1 )
+custom_fonts/font = ExtResource( 7 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/disabled = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+text = "Exit"
+
+[connection signal="pressed" from="Container/Buttons/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="Container/Buttons/ExitButton" to="." method="_on_ExitButton_pressed"]
